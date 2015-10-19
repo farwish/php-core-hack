@@ -1,10 +1,12 @@
 /*
 |----------------------------------------
-| @weiChen translate, BSD License
-| @farwish.com
+| Hack the Core of PHP
+| @weiChen translate, <farwish@live.com>
+| @BSD License
 */
 
   简单的PHP并不总是够用，尽管这种情况对大多数使用者很罕见，专业的应用程序会很快把PHP带到它的性能瓶颈，在速度上或在功能上。
+
 
 ### 存在可能性的扩展
 
@@ -47,6 +49,7 @@ Zend引擎：
     当然，扩展同样可以直接在Zend引擎中实现。这是个很好的策略当你需要改变语言行为或直接构建至语言核心的特殊功能。总的来说，不管怎样，
   修改Zend引擎应该避免。这里的改变导致与外界不兼容，并且任何人几乎永远不会适应打过补丁的Zend引擎。
   修改部分不能与主PHP源文件分开并且下次使用官方源文件库升级会覆盖。因此，这种方法通常被认为是糟糕的实践，由于它的罕见，没有包括在这里。
+
 
 ### 源码排版
 
@@ -154,6 +157,7 @@ Zend引擎：
   复杂的类型像数组和对象需要区别对待。Zend为这些类型提供单独的API - 它们使用Hash表存储。
     
   Note：为了减轻下面源码例子的复杂性，我们首先只用类似整型的简单类型来工作。在本章后面会讨论关于创建更多高级类型。
+ 
     
 ### PHP的自动生成系统
   
@@ -185,7 +189,7 @@ Zend引擎：
      code and repeat the last two steps as often as necessary.
      （重复3-6步，直到你对ext/my_module/config.m4满意并且第6步确保你的模块已经编译进PHP。接下来，开始编写代码，并在必要时重复最后两步。）
     
-  默认的config.m4文件：
+  Example #1 默认的config.m4文件：
     ```
     dnl $Id: build.xml 297078 2010-03-29 16:25:51Z degeberg $
     dnl config.m4 for extension my_module
@@ -271,6 +275,59 @@ Zend引擎：
   这需要你每次配置和编译PHP时使用 --enable-my_module。（译者注：把$PHP_MY_MODULE改为yes之后）
   Note：每次你改了 config.m4 后一定要运行 buildconf
   
+  
 ### 创建扩展
+  
+  我们起初将以创建一个非常简单的扩展作为开始，它基本上不过实现了一个返回接收到的整型参数的函数。下面的扩展展示了源代码。
+  
+  Example #2 一个简单的扩展
+  ```
+    /* include standard header */   # 引入标准头
+    #include "php.h"
 
+    /* declaration of functions to be exported */ # 导出函数的声明
+    ZEND_FUNCTION(first_module);
+
+    /* compiled function list so Zend knows what's in this module */
+    zend_function_entry firstmod_functions[] =
+    {
+        ZEND_FE(first_module, NULL)
+        {NULL, NULL, NULL}
+    };
+
+    /* compiled module information */
+    zend_module_entry firstmod_module_entry =
+    {
+        STANDARD_MODULE_HEADER,
+        "First Module",
+        firstmod_functions,
+        NULL, 
+        NULL, 
+        NULL, 
+        NULL, 
+        NULL,
+        NO_VERSION_YET,
+        STANDARD_MODULE_PROPERTIES
+    };
+
+    /* implement standard "stub" routine to introduce ourselves to Zend */
+    #if COMPILE_DL_FIRST_MODULE
+    ZEND_GET_MODULE(firstmod)
+    #endif
+
+    /* implement function that is meant to be made available to PHP */
+    ZEND_FUNCTION(first_module)
+    {
+        long parameter;
+
+        if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "l", &parameter) == FAILURE) {
+            return;
+        }
+
+        RETURN_LONG(parameter);
+    }
+    
+  ```
+  
+  
   
