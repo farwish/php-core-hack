@@ -288,14 +288,14 @@ Zend引擎：
     /* declaration of functions to be exported */ # 导出函数的声明
     ZEND_FUNCTION(first_module);
 
-    /* compiled function list so Zend knows what's in this module */
+    /* compiled function list so Zend knows what's in this module */  # 编译函数列表，这样Zend就知道模块里有什么
     zend_function_entry firstmod_functions[] =
     {
         ZEND_FE(first_module, NULL)
         {NULL, NULL, NULL}
     };
 
-    /* compiled module information */
+    /* compiled module information */ # 编译的模块信息
     zend_module_entry firstmod_module_entry =
     {
         STANDARD_MODULE_HEADER,
@@ -310,12 +310,12 @@ Zend引擎：
         STANDARD_MODULE_PROPERTIES
     };
 
-    /* implement standard "stub" routine to introduce ourselves to Zend */
+    /* implement standard "stub" routine to introduce ourselves to Zend */  实现引入到Zend的标准存根
     #if COMPILE_DL_FIRST_MODULE
     ZEND_GET_MODULE(firstmod)
     #endif
 
-    /* implement function that is meant to be made available to PHP */
+    /* implement function that is meant to be made available to PHP */  # 实现可用于PHP的函数
     ZEND_FUNCTION(first_module)
     {
         long parameter;
@@ -328,6 +328,39 @@ Zend引擎：
     }
     
   ```
+  
+  这份代码包含一个完整的PHP模块。我们马上将详细地解释源代码，但首先我们想讨论构建过程。（这将允许我们在陷入API讨论前进行不耐烦的实验。）
+  
+  Note：例子的源码使用PHP4.1.0及以上使用的Zend版本中的一些特性，它不会编译更老的PHP.4.0.x版本。
+  
+编译模块：
+  有两种编译模块的基本方式：
+    
+    * 使用ext目录提供的“make”机制，同样允许构建动态加载的模块。
+    * 手工编译源代码。
+    
+  第一种方法应该明确优先，后来，截至PHP4.0，这已经被规范化为一个标准的构建过程。它如此复杂的事实同样是它的缺点，不幸的是 - 它首先难以理解。
+  我们本章后面将提供一个更详细的介绍，但首先让我们用默认文件工作。第二种方法对那些没有全部可用PHP源文件树，没有访问所有文件权限，或者仅仅想玩弄自己键盘的人来说是不错的。
+  这些情况应该非常罕见，但为了任务的完整性我们同样会描述这种方法。
+  
+使用Make编译：
+  为了使用标准机制编译样本源代码，复制所有子目录到PHP源代码树的ext目录中。接下来运行 buildconf，将创建一个更新过的包含新扩展适当选项的 configure 脚本。默认，所有样本源代码是禁用的，所以你不用害怕破坏你的构建过程。
+  
+  你运行 buildconf 之后，configure --help 显示下面的额外模块：
+  ```
+    --enable-array_experiments   BOOK: Enables array experiments
+    --enable-call_userland       BOOK: Enables userland module
+    --enable-cross_conversion    BOOK: Enables cross-conversion module
+    --enable-first_module        BOOK: Enables first module
+    --enable-infoprint           BOOK: Enables infoprint module
+    --enable-reference_test      BOOK: Enables reference test module
+    --enable-resource_test       BOOK: Enables resource test module
+    --enable-variable_creation   BOOK: Enables variable-creation module
+  ```
+  
+  更早在Example #1 中展示的模块可以用 --enable-first_module 或 --enable-first_module=yes 来打开。
+  
+手工编译：
   
   
   
