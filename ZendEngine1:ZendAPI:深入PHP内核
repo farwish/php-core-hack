@@ -194,8 +194,7 @@ Zend引擎：
      Repeat steps 3-6 until you are satisfied with ext/my_module/config.m4 and
      step 6 confirms that your module is compiled into PHP. Then, start writing
      code and repeat the last two steps as often as necessary.
-     （重复3-6步，直到你对ext/my_module/config.m4满意并且第6步确保你的模块已经编译进PHP。
-     接下来，开始编写代码，并在必要时重复最后两步。）
+     （重复3-6步，直到你对ext/my_module/config.m4满意并且第6步确保你的模块已经编译进PHP。接下来，开始编写代码，并在必要时重复最后两步。）
     
   Example #1 默认的config.m4文件：
     ```
@@ -276,7 +275,8 @@ Zend引擎：
   那就是，如果使用 --enable-my_module，你应该移除支持 --with-my_module，反之亦然。
   
   默认，ext_skel 创建的 config.m4 文件 接受两个指令并且自动开启你的扩展。开启扩展用 PHP_EXTENSION 宏来做。
-  当使用者渴望改变包含你的模块到PHP二进制文件中的默认行为（通过明确的说明 --enable-my_module 或 --with-my_module），把 $PHP_MY_MODULE 改为 “yes”：
+  当使用者渴望改变包含你的模块到PHP二进制文件中的默认行为（通过明确的说明 --enable-my_module 或 --with-my_module），
+  把 $PHP_MY_MODULE 改为 “yes”：
   ```
     if test "$PHP_MY_MODULE" == "yes"; then dnl
       Action.. PHP_EXTENSION(my_module, $ext_shared)
@@ -352,8 +352,7 @@ Zend引擎：
     * 手工编译源代码。
     
   第一种方法应该明确优先，后来，截至PHP4.0，这已经被规范化为一个标准的构建过程。
-  它如此复杂的事实同样是它的缺点，不幸的是 - 它首先难以理解。
-  我们本章后面将提供一个更详细的介绍，但首先让我们用默认文件工作。
+  它如此复杂的事实同样是它的缺点，不幸的是 - 它首先难以理解。我们本章后面将提供一个更详细的介绍，但首先让我们用默认文件工作。
   第二种方法对那些没有全部可用PHP源文件树，没有访问所有文件权限，或者仅仅想玩弄自己键盘的人来说是不错的。
   这些情况应该非常罕见，但为了任务的完整性我们同样会描述这种方法。
   
