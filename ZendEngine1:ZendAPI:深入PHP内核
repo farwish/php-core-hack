@@ -167,7 +167,8 @@ Zend引擎：
 ### PHP的自动生成系统
   
   PHP4有非常灵活地自动生成系统。所有的模块在ext目录的一个子目录中。除了它自己的源代码外，
-  每个模块包含一个 config.m4 文件，作为模块配置。（例如：http://www.gnu.org/software/m4/m4.html）
+  每个模块包含一个 config.m4 文件，作为模块配置。
+  （什么是M4：http://www.gnu.org/software/m4/m4.html 译：http://www.cnblogs.com/farwish/p/4899676.html）
   
   所有这些存根文件都是随着 .cvsignore 自动生成，通过一个 ext 目录内叫 ext_skel 的小shell脚本。
   作为参数，它需要你想创建模块的名字。shell脚本接下来随着有关的存根文件创建一个同名的目录。
