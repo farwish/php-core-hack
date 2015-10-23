@@ -287,8 +287,9 @@ Zend引擎：
   这需要你每次配置和编译PHP时使用 --enable-my_module。（译者注：把$PHP_MY_MODULE改为yes之后）
   Note：每次你改了 config.m4 后一定要运行 buildconf
   
-  (另 PHP5构建系统 - ext_skel脚本：http://php.net/manual/zh/internals2.buildsys.skeleton.php )
-  
+  (译者注：
+    PHP5构建系统 - ext_skel脚本：http://php.net/manual/zh/internals2.buildsys.skeleton.php
+    组成扩展的文件：http://php.net/manual/zh/internals2.structure.files.php )
   
 ### 创建扩展
   
