@@ -42,20 +42,27 @@
 
   ```
   
-  * 包含 counter_module_entry 的行定义了一个全局变量，一个宏指针指向它，也包含提供给扩展的 zend_module_entry。尽管后面的讨论考虑“true”全局变量的缺点，
-    这种用法是故意的；Zend采取预防措施来防止滥用这个变量。
+  * 包含 counter_module_entry 的行定义了一个全局变量，一个宏指针指向它，也包含提供给扩展的 zend_module_entry。
+    尽管后面的讨论考虑“true”全局变量的缺点，这种用法是故意的；Zend采取预防措施来防止滥用这个变量。
   
   * PHP_COUNTER_API 定义用来给非PHP函数的想要开放给其它模块用的模块使用。
   
-  * counter扩展没有定义任何东西，在最终版本的头文件中，这个宏已被移除。PHPAPI在其它地方声明，在标准扩展中应用使实用的phpinfo()功用函数可用于其它扩展。
+  * counter扩展没有定义任何东西，在最终版本的头文件中，这个宏已被移除。PHPAPI在其它地方声明，
+    在标准扩展中应用使实用的phpinfo()功用函数可用于其它扩展。
   
   * 引入 TSRM.h 可以跳过，如果PHP或扩展编译时没加 thread-safety 选项；因为在那种情况下，没有使用 TSRM。
 
-  * 一个标准的引用列表，给出了扩展自己的 php_counter.h。configure 生成的 config.h 给出确定的扩展访问。php.h 是整个PHP和Zend APIs的入口。
-    php_ini.h 为运行时配置入口添加APIs。不是所有的扩展要使用它。最后，/ext/standard/info.h 导入上述 phpinfo() 功用API。
+  * 一个标准的引用列表，给出了扩展自己的 php_counter.h。configure 生成的 config.h 给出确定的扩展访问。
+    php.h 是整个PHP和Zend APIs的入口。php_ini.h 为运行时配置入口添加APIs。不是所有的扩展要使用它。
+    最后，/ext/standard/info.h 导入上述 phpinfo() 功用API。
     
   * COMPILE_DL_COUNTER 只由 configure 定义，如果counter启用了扩展并作为一个动态加载的模块而不是静态链接到PHP中。
     ZEND_GET_MODULE 定义了一个Zend用来在运行时获取扩展的 zend_module_entry 的极小的函数。
   
   注意：偷看了 main/php_config.h 的聪明读者在尝试构建静态启用地counter扩展会注意到，同样有一个定义的 HAVE_COUNTER 常量，源代码未检查。
   有一个简单的未检测的原因：没必要。如果扩展没有启用，源文件永远不会被编译。
+
+
+### zend_module结构
+
+  
