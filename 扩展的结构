@@ -65,4 +65,85 @@
 
 ### zend_module结构
 
+  PHP扩展的主要源文件含几个给C程序员的新的结构体。最重要的是，开始一个新扩展时首先接触的是 zend_module 结构体。
+  这个结构体包含大量的信息来告诉Zend引擎有关扩展的依赖，版本，回调，和其它关键数据。这个结构体随着时间的推移已突变；
+  这节将聚焦在从 PHP5.2 开始出现的结构体上，并识别少量在 PHP5.3 中改变的部分。
+  
+  counter.c 中的 zend_module 声明看起来像在任何代码写入前。例子文件由 ext_skel --extname=counter,包括移除一些过时的结构：
+  
+  Example #1 zend_module declaration in the counter extension
+  ```
+  /* {{{ counter_module_entry
+   */
+  zend_module_entry counter_module_entry = {
+    STANDARD_MODULE_HEADER,
+    "counter",
+    counter_functions,
+    PHP_MINIT(counter),
+    PHP_MSHUTDOWN(counter),
+    PHP_RINIT(counter),        /* Replace with NULL if there's nothing to do at request start */
+    PHP_RSHUTDOWN(counter),    /* Replace with NULL if there's nothing to do at request end */
+    PHP_MINFO(counter),
+    "0.1", /* Replace with version number for your extension */
+    STANDARD_MODULE_PROPERTIES
+  };
+  /* }}} */
+  ```
+
+  乍一看，这有点令人畏惧，但大部分非常容易理解。这是 PHP5.3 zend_modules.h 中的 zend_module 定义：
+  
+  Example #2 zend_module definition in PHP5.3
+  ```
+  struct _zend_module_entry {
+    unsigned short size;
+    unsigned int zend_api;
+    unsigned char zend_debug;
+    unsigned char zts;
+    const struct _zend_ini_entry *ini_entry;
+    const struct _zend_module_dep *deps;
+    const char *name;
+    const struct _zend_function_entry *functions;
+    int (*module_startup_func)(INIT_FUNC_ARGS);
+    int (*module_shutdown_func)(SHUTDOWN_FUNC_ARGS);
+    int (*request_startup_func)(INIT_FUNC_ARGS);
+    int (*request_shutdown_func)(SHUTDOWN_FUNC_ARGS);
+    void (*info_func)(ZEND_MODULE_INFO_FUNC_ARGS);
+    const char *version;
+    size_t globals_size;
+  #ifdef ZTS
+    ts_rsrc_id* globals_id_ptr;
+  #else
+    void* globals_ptr;
+  #endif
+    void (*globals_ctor)(void *global TSRMLS_DC);
+    void (*globals_dtor)(void *global TSRMLS_DC);
+    int (*post_deactivate_func)(void);
+    int module_started;
+    unsigned char type;
+    void *handle;
+    int module_number;
+  };
+  ```
+  
+  这些中的许多字段永远不会被一个扩展开发者接触到。有一些标准宏自动把它们设置成合适的值。
+  宏 STANDARD_MODULE_HEADER 填充所有的值直到 deps 字段。另外，宏 STANDARD_MODULE_HEADER_EX 会把 deps 字段设置为空来给开发者使用。
+  开发者永远为 name 到 version 的一切富有责任。然后，宏 STANDARD_MODULE_PROPERTIES 会填充其余的结构，
+  或者宏 STANDARD_MODULE_PROPERTIES_EX 可以用来把扩展的全局变量和使用后的函数字段设为非填充的。许多新式的扩展会使用模块的全局变量。
+  
+  注意：如果开发者完全手工填充它们，不借助任何快捷的宏，表格给出了每个字段该有的值。这并不推荐。许多字段的“正确的值”可能会改变。
+  只要有可能就使用宏。
+   --------------------------------------------------------------------------
+  |                 模块结构体字段的值                                        |
+  |--------------------------------------------------------------------------
+  | 字段            值                              描述
+  |--------------------------------------------------------------------------
+  | size          sizeof(zend_module_entry)       结构体以字节为单位的大小。
+  |--------------------------------------------------------------------------
+  | zend_api      ZEND_MODULE_API_NO              这个模块编译时的Zend API版本。
+  |---------------------------------------------------------------------------
+  | zend_debug    ZEND_DEBUG                      标示模块是否在ZTS启用的情况下编译的标志。
+  |---------------------------------------------------------------------------------------
+  | ini_entry     NULL                            这个指针由Zend在内部使用来保持模块声明的 INI 记录的本地引用。
+  |--------------------------------------------------------------------------------------------------------------
+  |
   
