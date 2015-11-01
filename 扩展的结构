@@ -199,7 +199,7 @@
   | ⑨ 这个字段由 STANDARD_MODULE_PROPERTIES_EX 填充。                                                                           |
    -----------------------------------------------------------------------------------------------------------------------------
    
-### 实际情况中的结构填充
+  #### 实际情况中的结构填充
 
   要和所有这些字段打交道，知道以什么目的使用哪个是令人混淆的。这是"counter"例子扩展中的zend_module定义在修改后的最终形式。
   
@@ -233,3 +233,78 @@
     列出了模块输出到用户空间的函数。
   * NO_VERSION_YET 是一个告诉Zend 这个模块没有版本的特别好的方式。在一个真实的模块中，可能更正确的是把"1.0"放到里面。
   * "counter" 使用每个模块的全局变量，所以使用了 PHP_MODULE_GLOBALS。
+  * 这个模块没有后关闭功能，所以使用了NULL。
+  * 当这个模块使用了全局变量，STANDARD_MODULE_PROPERTIES_EX 用来释放结构体。
+  
+  #### 5.2 与 5.3 之间的变化
+没有任何东西。PHP5.2 和 PHP5.3 zend_modulede 的唯一区别是极少的常量关键字。
+
+### 扩展的全局变量
+
+  #### PHP中的全局变量介绍
+  
+  在像C这样的语言中，一个全局变量可以在任何函数中访问不需要任何额外声明。这些传统的全局变量有一些缺点：
+  * 阻拦任何特殊选项传递给编译器，一个全局变量可以被程序的任何地方的任何一块代码访问和改变，不管那块代码是否应该做这件事。
+  * 一个典型的全局变量不是线程安全的。
+  * 全局变量的名称和变量本身一样是全局变量。
+  
+  PHP扩展的全局变量更适合称为"扩展状态"，因为大部分模块必须记住它们在函数间调用的关系。"counter"扩展是满足这个需要的完美例子：
+  基础接口调用一个有持续存在的值的counter。对Zend和PHP陌生的程序员可能要在 counter.c 中做些事来存储这个值：
+  
+  Example #1 存储基础counter接口值的错误方式
+  ```
+  /* ... */
+  static long basic_counter_value;
+
+  /* ... */
+
+  PHP_FUNCTION(counter_get)
+  {
+    RETURN_LONG(basic_counter_value);
+  }
+  ```
+  
+  表面上这似乎是一个可行的解决方案，而且事实上，在一个简单的测试例子中它将正确发挥作用。然而，
+  有许多情况是不止一个PHP的副本运行在相同的线程里，这意味着超过一个的counter模块实例。
+  这些多线程突然共用相同的counter值，这显然是不可取的。另一个问题是当考虑到另一个扩展可能总有一天碰巧会有一个同名的全局变量，
+  并由于C作用域规则，这有潜在可能性导致编译失败或更坏的运行错误。更精细的事是必要的，所以存在Zend对每个模块全局变量线程安全的支持。
+  
+  #### 声明全局变量
+  
+  不管一个模块只使用一个全局变量或许多的，它们必须定义在结构体中，并且那个结构体必须被声明。有一些协助以避免模块间名称冲突的宏：
+  ZEND_BEGIN_MODULE_GLOBALS(), ZEND_END_MODULE_GLOBALS(), 和 ZEND_DECLARE_MODULE_GLOBALS()。这三个都作为模块短名称的一个参数，
+  其中在counter模块中是一个简单的"计数器"。这是 php_counter.h 全局变量的结构定义：
+  
+  Example #2 counter模块的全局变量
+  ```
+  ZEND_BEGIN_MODULE_GLOBALS(counter)
+    long        basic_counter_value;
+  ZEND_END_MODULE_GLOBALS(counter)
+  ```
+  
+  这是 counter.c 中的定义：
+  
+  Example #3 counter模块的全局变量结构体声明
+  ```
+  ZEND_DECLARE_MODULE_GLOBALS(counter)
+  ```
+  
+  #### 访问模块全局变量
+  
+  正如上面讨论的，每个模块的全局变量在C结构体中声明，名字被Zend宏遮盖。作为结果，访问结构体成员的理想方式是使用深层次的宏。
+  因此，大部分不是所有的扩展有声明的全局变量像这样在它们的头文件中：
+  
+  Example #4 每个模块的存取宏
+  ```
+  #ifdef ZTS
+  #define COUNTER_G(v) TSRMG(counter_globals_id, zend_counter_globals *, v)
+  #else
+  #define COUNTER_G(v) (counter_globals.v)
+  #endif
+  ```
+  
+  注意：
+  
+  
+  
+  
