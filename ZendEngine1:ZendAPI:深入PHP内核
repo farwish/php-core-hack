@@ -2,8 +2,10 @@
 |----------------------------------------
 | Hack the Core of PHP
 | @weiChen translate, <farwish@live.com>
-| @BSD License
+| @MIT License
 */
+
+  http://php.net/manual/zh/internals2.ze1.zendapi.php
 
   简单的PHP并不总是够用，尽管这种情况对大多数使用者很罕见，专业的应用程序会很快把PHP带到它的性能瓶颈，在速度上或在功能上。
 
