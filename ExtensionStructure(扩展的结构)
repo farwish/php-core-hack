@@ -1,3 +1,12 @@
+/*
+|----------------------------------------
+| Extension structure
+| @weiChen translate, <farwish@live.com>
+| @MIT License
+*/
+
+  http://php.net/manual/zh/internals2.structure.php
+
 ### 组成扩展的文件  （ http://php.net/manual/zh/internals2.structure.basics.php ）
 ### 基础结构  （ http://php.net/manual/zh/internals2.structure.basics.php ）
 
@@ -386,7 +395,39 @@
   除了全局变量初始化和某些很少使用的回调，还有一部分模块的生命周期要检查：调用 phpinfo()。用户看到的调用输出，
   无论是文本或HTML或其它的，由产生调用时每个加载进PHP解释器的独立的扩展产生。
   
+  为了提供格式中立的输出，头文件 "ext/standard/info.h" 提供了一个产生标准化显示元素的函数数组。具体来说，
+  几个创建已存在相似表格的函数：
   
+  php_info_print_table_start()
+    在phpinfo()输出中打开一个表格。没有参数。
+    
+  php_info_print_table_now()
+    在phpinfo()输出中打印一个表格行。没有参数，列的数量，加上相同数量的针对每列内容的文本 char* 参数。
+    
+  php_info_print_table_end()
+    关闭之前用php_info_print_table_start()打开的表格。没有参数。
+    
+  使用这四个函数，可以为扩展的几乎任何结合的特点产生状态信息。这是counter扩展中的回调信息：
+  
+  Example #1 counter的 PHP_MINFO 函数
+  ```
+  /* {{{ PHP_MINFO(counter) */
+  PHP_MINFO_FUNCTION(counter)
+  {
+    char        buf[10];
+
+    php_info_print_table_start();
+    php_info_print_table_row(2, "counter support", "enabled");
+    snprintf(buf, sizeof(buf), "%ld", COUNTER_G(basic_counter_value));
+    php_info_print_table_row(2, "Basic counter value", buf);
+    php_info_print_table_end();
+  }
+  /* }}} */
+  ```
   
 
 ### 测试一个扩展 （ http://php.net/manual/zh/internals2.structure.tests.php ）
+
+  良好编程的一个公认必要条件是测试。PHP提供了一种用于回归测试的测试单元，以一个叫run-test.php的脚本的形式。
+  
+  特定模块的测试放在模块目录的 test/ 子目录内，有一个 .phpt 扩展。PHPT 格式的细节见：http://qa.php.net
