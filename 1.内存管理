@@ -1,0 +1,10 @@
+### 内存管理基础
+  http://php.net/manual/zh/internals2.memory.management.php
+  
+### 数据持久化
+  http://php.net/manual/en/internals2.memory.persistence.php
+  
+  在这个上下文中，数据持久化是
+  
+### 线程安全资源管理器
+  http://php.net/manual/en/internals2.memory.tsrm.php
