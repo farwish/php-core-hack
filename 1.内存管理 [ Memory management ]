@@ -1,4 +1,11 @@
-### 内存管理基础
+/*
+|----------------------------------------
+| Memory managerment
+| @weiChen translate, <farwish@live.com>
+| @MIT License
+*/
+
+### 内存管理基础 [ Basic memory management ]
   （中文doc）http://php.net/manual/zh/internals2.memory.management.php
   
   摘录：
@@ -30,7 +37,7 @@
   而会跳出并中止当前请求。
   
   
-### 数据持久化
+### 数据持久化 [ Data persistence ]
   http://php.net/manual/en/internals2.memory.persistence.php
   
   在这个上下文中，数据持久化的意思是任何想在当前请求中存活的数据。引擎内部的内存管理非常专注于请求绑定分配，
@@ -66,9 +73,11 @@
   |                                                         当以 NULL 结束的字符串长度已经知道时，和 pestrdup 相似。  |
    -------------------------------------------------------------------------------------------------------------------
   
-  警告：重要的是记住，被分配的持久内存没有被引擎优化和追踪；它不受 memory_limit 管制，另外，Hacker 为引擎创建的所有变量
+  Warning：重要的是记住，被分配的持久内存没有被引擎优化和追踪；它不受 memory_limit 管制，另外，Hacker 为引擎创建的所有变量
   不得使用持久内存。
   
 
-### 线程安全资源管理器
+### 线程安全资源管理器 [ Thread-Safe Resource Manager ]
   http://php.net/manual/en/internals2.memory.tsrm.php
+
+  
