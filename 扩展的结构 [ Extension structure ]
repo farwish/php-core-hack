@@ -79,7 +79,8 @@
   有一个简单的未检测的原因：没必要。如果扩展没有启用，源文件永远不会被编译。
 
 
-### zend_module结构 （ http://php.net/manual/zh/internals2.structure.modstruct.php ）
+### zend_module结构
+  http://php.net/manual/zh/internals2.structure.modstruct.php
 
   PHP扩展的主要源文件含几个给C程序员的新的结构体。最重要的是，开始一个新扩展时首先接触的是 zend_module 结构体。
 这个结构体包含大量的信息来告诉Zend引擎有关扩展的依赖，版本，回调，和其它关键数据。这个结构体随着时间的推移已突变；
@@ -257,7 +258,8 @@
     没有任何东西。PHP5.2 和 PHP5.3 zend_modulede 的唯一区别是极少的常量关键字。
 
 
-### 扩展的全局变量  （ http://php.net/manual/zh/internals2.structure.globals.php ）
+### 扩展的全局变量
+  http://php.net/manual/zh/internals2.structure.globals.php
 
   #### PHP中的全局变量介绍
   
@@ -361,7 +363,8 @@
     这是一个正确的实现。然而，它不是完整的一个。一个扩展的生命周期这节将解释为什么。
   
   
-### 一个扩展的生命周期  ( http://php.net/manual/zh/internals2.structure.lifecycle.php )
+### 一个扩展的生命周期
+  http://php.net/manual/zh/internals2.structure.lifecycle.php
 
   一个PHP扩展在其生命周期经过几个阶段。所有这些阶段都是开发者执行各种初始化，终止，或信息功能的机会。
 Zend API 允许钩入PHP扩展存在的五个独立阶段，除去被PHP函数调用的。
@@ -434,7 +437,8 @@ Zend API 允许钩入PHP扩展存在的五个独立阶段，除去被PHP函数�
     ```
   
 
-### 测试一个扩展 （ http://php.net/manual/zh/internals2.structure.tests.php ）
+### 测试一个扩展
+  http://php.net/manual/zh/internals2.structure.tests.php
 
   良好编程的一个公认必要条件是测试。PHP提供了一种用于回归测试的测试单元，以一个叫run-test.php的脚本的形式。
   
