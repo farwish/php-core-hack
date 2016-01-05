@@ -216,6 +216,7 @@ Zend能够确定一个块是否在使用，自动释放未使用的块和丢失�
   ```
     
   Example #1 默认的config.m4文件：
+  
     ```
     dnl $Id: build.xml 297078 2010-03-29 16:25:51Z degeberg $
     dnl config.m4 for extension my_module
@@ -246,7 +247,7 @@ Zend能够确定一个块是否在使用，自动释放未使用的块和丢失�
       dnl   MY_MODULE_DIR=$PHP_MY_MODULE
       dnl else # search default path list
       dnl   AC_MSG_CHECKING([for my_module files in default path])
-      dnl   for i in $SEARCH_PATH ; do
+      dnl   for i in $SEARCH_PATH ; doe
       dnl     if test -r $i/$SEARCH_FOR; then
       dnl       MY_MODULE_DIR=$i
       dnl       AC_MSG_RESULT(found in $i)
@@ -315,6 +316,7 @@ Zend能够确定一个块是否在使用，自动释放未使用的块和丢失�
   我们起初将以创建一个非常简单的扩展作为开始，它基本上不过实现了一个返回接收到的整型参数的函数。下面的扩展展示了源代码。
   
   Example #2 一个简单的扩展
+  
   ```
     /* include standard header */   # 引入标准头
     #include "php.h"
@@ -435,6 +437,7 @@ Zend能够确定一个块是否在使用，自动释放未使用的块和丢失�
   在生产环境中你应该把它们放到独立的目录内。
   
   Example #3 A test file for first_module.so
+  
   ```
     <?php
       // remove next comment if necessary
