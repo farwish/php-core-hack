@@ -190,6 +190,7 @@ Zend能够确定一个块是否在使用，自动释放未使用的块和丢失�
 作为参数，它需要你想创建模块的名字。shell脚本接下来随着有关的存根文件创建一个同名的目录。
   
   一步一步，这个过程如下：（ 译者注：加 --no-help 选项，则下面的1到8条提示则不显示出来 ）
+  
   ```
     $ ./ext_skel --extname=my_module
     
@@ -212,6 +213,7 @@ Zend能够确定一个块是否在使用，自动释放未使用的块和丢失�
      step 6 confirms that your module is compiled into PHP. Then, start writing
      code and repeat the last two steps as often as necessary.
      （重复3-6步，直到你对ext/my_module/config.m4满意并且第6步确保你的模块已经编译进PHP。接下来，开始编写代码，并在必要时重复最后两步。）
+  ```
     
   Example #1 默认的config.m4文件：
     ```
