@@ -16,3 +16,5 @@ Browser --->   Web Server   --->   功能模块                  ----->   Web Se
              |            |      |                        |        |                 |
              |------------|      |------------------------|        |-----------------|
 ```
+
+            PHP Script -> ZE Compiler -> Opcodes -> ZE Executor -> Output
