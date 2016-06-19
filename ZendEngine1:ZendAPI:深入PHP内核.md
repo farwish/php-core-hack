@@ -549,3 +549,50 @@ We are in the test function!
 We have 3 as type  
 Return value: 'hello'  
 ```
+
+
+### 初始化文件支持
+---
+PHP4以重新设计的文件支持为特色。现在直接在代码中指定默认的初始化方式已成为可能，在运行时读取和改变这些值，  
+并且为更改通知创建消息句柄。  
+
+要在自己的模块中创建一个 .ini 块，使用宏 *PHP_INI_BEGIN()* 标记块开始，以 *PHP_INI_END()* 标记结束。  
+在中间可以用 *PHP_INI_ENTRY()* 创建记录。  
+
+```
+PHP_INI_BEGIN()  
+PHP_INI_ENTRY("first_ini_entry", "has_string_value", PHP_INI_ALL, NULL)  
+PHP_INI_ENTRY("second_ini_entry", "2",               PHP_INI_SYSTEM, OnChangeSecond)  
+PHP_INI_ENTRY("third_ini_entry", "xyz",              PHP_INI_USER, NULL)  
+PHP_INI_END()  
+```
+
+*PHP_INI_ENTRY()* 宏接受四个参数：配置项名称，值，更改权限，一个改变通知句柄的指针(译者注：即值变更后的回调函数)。  
+记录名称和值必须指定为字符串，不管它们实际是字符串或整型。  
+权限被分为三块：*PHP_INI_SYSTEM* 只允许直接修改 `php.ini` 文件；*PHP_INI_USER* 允许用户在运行时使用其它文件覆盖修改，  
+如 `.htaccess` ; *PHP_INI_ALL* 允许无限制的修改。另外还有第四个等级，*PHP_INI_PERDIR* ，针对我们还不能验证的行为。  
+
+第四个参数由更改通知句柄组成。  
+不管何时这些初始记录被更改，这个句柄会被调用。这个句柄可以用 *PHP_INI_MH* 宏来定义：  
+
+```
+PHP_INI_MH(OnChangeSecond);  // handler for ini_entry  
+"second_ini_entry"  
+
+// specify ini-entries here
+
+PHP_INI_MH(OnChangeSecond)  
+{  
+    zend_printf("Message caught, our ini entry has been changed to %s&lt;br&gt;", new_value);  
+    
+    return(SUCCESS);  
+}  
+```
+
+新的值已经在 new_value 变量中作为字符串传给句柄。当看看 *PHP_INI_MH* 的定义时，你实际有很少的参数可以使用：  
+
+```
+#define PHP_INI_MH(name) int name(php_ini_entry *entry, char *new_value,  
+                                  uint new_value_length, void *mh_arg1,  
+                                  void *mh_arg2, void *mh_args)  
+```
